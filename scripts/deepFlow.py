@@ -42,7 +42,7 @@ warnings.filterwarnings("ignore")
 
 # Define software identity
 software = "DeepFlow"
-version = "0.0.4alpha"
+version = "0.1.0beta"
 
 # Definitions
 def extract_data(input_path, extracted_path, splitted):
@@ -443,7 +443,15 @@ def get_flow(masked, out_file):
         (abs(np.sum(retrograde_sum))) / np.sum(antegrade_sum)
     ) * 100
     boolean = antegrade_flow > abs(retrograde_flow)
-    return net_flow, retrograde_flow, antegrade_flow, regurgitation_fraction, boolean, X, np_sum
+    return (
+        net_flow,
+        retrograde_flow,
+        antegrade_flow,
+        regurgitation_fraction,
+        boolean,
+        X,
+        np_sum,
+    )
 
 
 def asf(img, out_file):
@@ -540,25 +548,28 @@ def load_nii(nii_path, out_file, out_results):
         retrograde_flow,
         antegrade_flow,
         regurgitation_fraction,
-        boolean, X, np_sum
+        boolean,
+        X,
+        np_sum,
     ) = get_flow(masked, out_file)
     (
         net_flow_neg,
         retrograde_flow_neg,
         antegrade_flow_neg,
         regurgitation_fraction_neg,
-        boolean_neg, X_neg, np_sum_neg
+        boolean_neg,
+        X_neg,
+        np_sum_neg,
     ) = get_flow(masked_neg, out_file)
 
     if boolean == True:
         plt.plot(X, np_sum)
-        plt.axhline(y=0, color='r', linestyle='-')
+        plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")
         plt.ylabel("Flow in mL/s")
-        plt.savefig(save_path,
-        dpi = 150)    
-        plt.clf()  
+        plt.savefig(save_path, dpi=150)
+        plt.clf()
         return (
             nifti_ids,
             net_flow,
@@ -574,13 +585,12 @@ def load_nii(nii_path, out_file, out_results):
         )
     else:
         plt.plot(X_neg, np_sum_neg)
-        plt.axhline(y=0, color='r', linestyle='-')
+        plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")
         plt.ylabel("Flow in mL/s")
-        plt.savefig(save_path,
-        dpi = 150)
-        plt.clf() 
+        plt.savefig(save_path, dpi=150)
+        plt.clf()
         return (
             nifti_ids,
             net_flow_neg,
@@ -627,7 +637,7 @@ def get_ai(nifti_final, out_file, out_results):
             aorta_area,
             masks_v_max,
             masks_v_min,
-        ) = load_nii(path, out_file, out_results= out_results)
+        ) = load_nii(path, out_file, out_results=out_results)
         ids.append(nifti_ids)
         regurgitation.append(regurgitation_fraction)
         net_flow_list.append(net_flow)
@@ -733,7 +743,7 @@ def pipeline(
         aorta_area_list,
         masks_v_max_list,
         masks_v_min_list,
-    ) = get_ai(nifti_final, out_file, out_results= out_results)
+    ) = get_ai(nifti_final, out_file, out_results=out_results)
     get_csv(
         ids,
         regurgitation,
@@ -808,7 +818,7 @@ def main():
                         print(f"{filename} failed\nAdding it to the list.")
                         failFile.write(f"{filename}\n")
     end = timer()
-    time_taken = timedelta(seconds=end-start)
+    time_taken = timedelta(seconds=end - start)
     os.system(f"bash /concat.sh {out_results}")
     os.system(f"rm {out_results}/*.csv")
     os.system(
