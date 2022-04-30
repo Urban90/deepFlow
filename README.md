@@ -41,7 +41,7 @@ Results will be written in the `output` directory of the current folder.
 
 **deepflow:** Caller script that pulls (if required) and runs the deepFlow Docker image with correct parameters and mounts directories
 
-**concat:** Internal Docker VM script which compiles the results per run.
+**concat.sh:** Internal Docker VM script which compiles the results per run.
 
 **deepFlow.py:** Main script that does all the calculations inside the Docker VM.
 
