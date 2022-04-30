@@ -1,27 +1,42 @@
 #!/usr/bin/bash
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+    echo "deepflow <folder of DICOM files> <optional 'cpu' flag>"
+    exit
+fi
+folder="$1"
+d=$(date +"%Y-%m-%d-%T")
 echo "Welcome to DeepFlow!"
-dk="saditya88/deepflow:gpu"
-if [ -z "$1" ]
+output=$(pwd)/output/
+mkdir -p "$output"
+if [ -z "$2" ]
 then
-    dk="saditya88/deepflow:gpu"
-elif [ $1 == "cpu" ]
+    echo -e "Using GPU acceleration.\nMake sure that the NVIDIA Drivers and container toolkits are installed."
+    echo "Working on folder: $folder"
+    docker run -u=$(id -u $USER):$(id -g $USER) \
+            --gpus all \
+            -v $(pwd)/assets:/assets \
+            -v "$output":/output \
+            -v ~/:/data/ \
+            -v "$folder":/input \
+            --rm \
+            saditya88/deepflow:gpu /input 1>"$output"/Run_"$d".log 2>"$output"/Warns_"$d".log
+elif [ $2 == "cpu" ]
 then
-    dk="saditya88/deepflow:cpu"
+    echo -e "CPU mode selected.\nPerformance might be slower."
+    docker run -u=$(id -u $USER):$(id -g $USER) \
+            -v $(pwd)/assets:/assets \
+            -v "$output":/output \
+            -v ~/:/data/ \
+            -v "$folder":/input \
+            --rm \
+            saditya88/deepflow:cpu /input 1>"$output"/Run_"$d".log 2>"$output"/Warns_"$d".log
 else
-    echo Unknwn input: "$1"
+    echo Unknwn input: "$folder"
     echo Only 'cpu' is accepted as an input
     echo If you wish to use the GPU version, no arguments are required.
     exit
 fi
-output=$(pwd)/output/
-mkdir -p "$output"
-echo Using the Docker image: "$dk"
-docker run -u=$(id -u $USER):$(id -g $USER) \
-           -e DISPLAY=$DISPLAY \
-           --gpus all \
-           -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-           -v $(pwd)/assets:/assets \
-           -v "$output":/output \
-           -v ~/:/data/ \
-           --rm \
-           "$dk"
+echo "All done."
+echo "Thanks for using deepFlow"

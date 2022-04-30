@@ -8,7 +8,6 @@
 
 ```text
 Docker
-X Window manager (X11/ XORG etc.)
 NVIDIA Driver (GPU version)
 NVIDIA Docker Container utilities (GPU version)
 ```
@@ -21,17 +20,16 @@ NVIDIA Docker Container utilities (GPU version)
 
 **GPU Version** (default and highly recommended)
 
-`bash deepflow`
+`bash deepflow <folder of DICOM files>`
 
 **CPU Version**
 
-`bash deepflow cpu`
+`bash deepflow <folder of DICOM ZIP files> cpu`
 
 *First run will pull the required Docker image which might take some time depending on the internet connection and the bandwidth.*
 
 ## Usage ##
 
-A GUI will ask you to select the folder containing zipped DICOM files.
 A single ZIP file per sample is expected.
 Results will be written in the `output` directory of the current folder.
 
@@ -44,4 +42,3 @@ Results will be written in the `output` directory of the current folder.
 **concat.sh:** Internal Docker VM script which compiles the results per run.
 
 **deepFlow.py:** Main script that does all the calculations inside the Docker VM.
-
