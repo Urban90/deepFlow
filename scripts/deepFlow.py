@@ -788,7 +788,7 @@ def main():
                         )
                     except:
                         print(f"{filename} failed\nAdding it to the list.")
-                        failFile.write(filename)
+                        failFile.write(f"{filename}\n")
     end = datetime.now()
     time_taken = end - start
     os.system(f"bash /concat.sh {out_aorta}")
