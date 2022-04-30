@@ -1,9 +1,21 @@
 #!/usr/bin/bash
 echo "Welcome to DeepFlow!"
-echo "If you're using the GPU version, make sure you've installed the NVIDIA container toolkit"
+dk="saditya88/deepflow:gpu"
+if [ -z "$1" ]
+then
+    dk="saditya88/deepflow:gpu"
+elif [ $1 == "cpu" ]
+then
+    dk="saditya88/deepflow:cpu"
+else
+    echo Unknwn input: "$1"
+    echo Only 'cpu' is accepted as an input
+    echo If you wish to use the GPU version, no arguments are required.
+    exit
+fi
 output=$(pwd)/output/
 mkdir -p "$output"
-echo "$output"
+echo Using the Docker image: "$dk"
 docker run -u=$(id -u $USER):$(id -g $USER) \
            -e DISPLAY=$DISPLAY \
            --gpus all \
@@ -12,4 +24,4 @@ docker run -u=$(id -u $USER):$(id -g $USER) \
            -v "$output":/output \
            -v ~/:/data/ \
            --rm \
-           saditya88/deepflow:gpu
+           "$dk"
