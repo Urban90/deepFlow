@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+echo "Welcome to DeepFlow!"
+echo "If you're using the GPU version, make sure you've installed the NVIDIA container toolkit"
+output=$(pwd)/output/
+mkdir -p "$output"
+echo "$output"
+docker run -u=$(id -u $USER):$(id -g $USER) \
+           -e DISPLAY=$DISPLAY \
+           --gpus all \
+           -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+           -v $(pwd)/assets:/assets \
+           -v "$output":/output \
+           -v ~/:/data/ \
+           --rm \
+           saditya88/deepflow:gpu
