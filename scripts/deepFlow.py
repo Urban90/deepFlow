@@ -13,7 +13,8 @@ import pydicom
 import shutil
 import tensorflow as tf
 import zipfile
-from datetime import datetime
+from timeit import default_timer as timer
+from datetime import timedelta
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
@@ -41,7 +42,7 @@ warnings.filterwarnings("ignore")
 
 # Define software identity
 software = "DeepFlow"
-version = "0.0.2alpha"
+version = "0.0.4alpha"
 
 # Definitions
 def extract_data(input_path, extracted_path, splitted):
@@ -99,7 +100,7 @@ def delete_manifest(extracted_path):
         x = os.path.join(extracted_path, filename)
         for subfile in os.listdir(x):
             y = os.path.join(x, subfile)
-            if subfile.endswith(".cvs"):
+            if not subfile.endswith(".dcm"):
                 os.system(f"rm {y}")
 
 
@@ -442,7 +443,7 @@ def get_flow(masked, out_file):
         (abs(np.sum(retrograde_sum))) / np.sum(antegrade_sum)
     ) * 100
     boolean = antegrade_flow > abs(retrograde_flow)
-    return net_flow, retrograde_flow, antegrade_flow, regurgitation_fraction, boolean
+    return net_flow, retrograde_flow, antegrade_flow, regurgitation_fraction, boolean, X, np_sum
 
 
 def asf(img, out_file):
@@ -459,7 +460,7 @@ def asf(img, out_file):
     return final_2
 
 
-def loadnii(nii_path, out_file):
+def load_nii(nii_path, out_file, out_results):
     p = pd.read_csv(out_file)
     dt = p["interval"].values[0] / 30 / 1000  # how much time in seconds in one frame
     pix_dim = p["dim1"].values[0] / 10
@@ -490,6 +491,8 @@ def loadnii(nii_path, out_file):
             masks.append(img)
     nifti_files_list = np.moveaxis(nifti_files_list, -1, 0)
     nifti_files_list = np.array(np.squeeze(nifti_files_list))
+    name = nifti_ids[0]
+    save_path = f"{out_results}/{name}.png"
     aorta_perimeter = np.mean(perimeters)
     max_aorta = np.max(max_diameters)
     min_aorta = np.max(min_diameters)
@@ -537,17 +540,25 @@ def loadnii(nii_path, out_file):
         retrograde_flow,
         antegrade_flow,
         regurgitation_fraction,
-        boolean,
+        boolean, X, np_sum
     ) = get_flow(masked, out_file)
     (
         net_flow_neg,
         retrograde_flow_neg,
         antegrade_flow_neg,
         regurgitation_fraction_neg,
-        boolean_neg,
+        boolean_neg, X_neg, np_sum_neg
     ) = get_flow(masked_neg, out_file)
 
     if boolean == True:
+        plt.plot(X, np_sum)
+        plt.axhline(y=0, color='r', linestyle='-')
+        plt.title(f"{name}\n{software} Analysis")
+        plt.xlabel("Time in ms")
+        plt.ylabel("Flow in mL/s")
+        plt.savefig(save_path,
+        dpi = 150)    
+        plt.clf()  
         return (
             nifti_ids,
             net_flow,
@@ -562,6 +573,14 @@ def loadnii(nii_path, out_file):
             masks_v_min,
         )
     else:
+        plt.plot(X_neg, np_sum_neg)
+        plt.axhline(y=0, color='r', linestyle='-')
+        plt.title(f"{name}\n{software} Analysis")
+        plt.xlabel("Time in ms")
+        plt.ylabel("Flow in mL/s")
+        plt.savefig(save_path,
+        dpi = 150)
+        plt.clf() 
         return (
             nifti_ids,
             net_flow_neg,
@@ -582,7 +601,7 @@ def create_nifti(nifti_final):
         dicom2nii(os.path.join(nifti_final, i))
 
 
-def get_ai(nifti_final, out_file):
+def get_ai(nifti_final, out_file, out_results):
     ids = []
     regurgitation = []
     antegrade_flow_list = []
@@ -608,7 +627,7 @@ def get_ai(nifti_final, out_file):
             aorta_area,
             masks_v_max,
             masks_v_min,
-        ) = loadnii(path, out_file)
+        ) = load_nii(path, out_file, out_results= out_results)
         ids.append(nifti_ids)
         regurgitation.append(regurgitation_fraction)
         net_flow_list.append(net_flow)
@@ -647,7 +666,7 @@ def get_csv(
     aorta_area_list,
     masks_v_max_list,
     masks_v_min_list,
-    out_aorta,
+    out_results,
 ):
     patient_id = str(ids[0])
     patient_id = patient_id.strip("[")
@@ -667,7 +686,7 @@ def get_csv(
     aortic_regurgitation["max_velocity"] = masks_v_max_list
     aortic_regurgitation["min_velocity"] = masks_v_min_list
     aortic_regurgitation.to_csv(
-        os.path.join(out_aorta, patient_id + ".csv"), index=False
+        os.path.join(out_results, patient_id + ".csv"), index=False
     )
     return aortic_regurgitation
 
@@ -680,7 +699,7 @@ def pipeline(
     masks_path_2,
     nifti_final,
     out_file,
-    out_aorta,
+    out_results,
 ):
     print("Extracting file")
     extract_data(path, extracted_path, splitted)
@@ -714,7 +733,7 @@ def pipeline(
         aorta_area_list,
         masks_v_max_list,
         masks_v_min_list,
-    ) = get_ai(nifti_final, out_file)
+    ) = get_ai(nifti_final, out_file, out_results= out_results)
     get_csv(
         ids,
         regurgitation,
@@ -727,7 +746,7 @@ def pipeline(
         aorta_area_list,
         masks_v_max_list,
         masks_v_min_list,
-        out_aorta,
+        out_results,
     )
     print("Deleting intermim files")
     os.system(f"rm -r {extracted_path}/*")
@@ -750,7 +769,7 @@ def main():
     extracted_path = "/output/extracted_path_final"
     mag = "/output/MAG/"
     jpg_path = "/output/jpg/"
-    out_aorta = "/output/results/"
+    out_results = "/output/results/"
     out_file = "/output/params.csv"
     model_aorta = "/assets/model.h5"
     masks_path_2 = "/output/masks2/"
@@ -759,16 +778,15 @@ def main():
     failed = f"{failed_folder}/List.txt"
     filenames_done = []
     count = 0
-    start = 0
+    start = timer()
     os.system(
-        f"mkdir -p {extracted_path} {mag} {jpg_path} {out_aorta} {masks_path_2} {nifti_final} {failed_folder}"
+        f"mkdir -p {extracted_path} {mag} {jpg_path} {out_results} {masks_path_2} {nifti_final} {failed_folder}"
     )
-    for i in os.listdir(out_aorta):
+    for i in os.listdir(out_results):
         i = i.split(".")[0]
         filenames_done.append(i)
     with open(failed, "a") as failFile:
         for filename in os.listdir(folder_path):
-            start = datetime.now()
             if filename.endswith(".zip"):
                 count += 1
                 path = os.path.join(folder_path, filename)
@@ -784,17 +802,17 @@ def main():
                             masks_path_2=masks_path_2,
                             nifti_final=nifti_final,
                             out_file=out_file,
-                            out_aorta=out_aorta,
+                            out_results=out_results,
                         )
                     except:
                         print(f"{filename} failed\nAdding it to the list.")
                         failFile.write(f"{filename}\n")
-    end = datetime.now()
-    time_taken = end - start
-    os.system(f"bash /concat.sh {out_aorta}")
-    os.system(f"mv {out_aorta}/*.tsv /output/")
+    end = timer()
+    time_taken = timedelta(seconds=end-start)
+    os.system(f"bash /concat.sh {out_results}")
+    os.system(f"rm {out_results}/*.csv")
     os.system(
-        f"rm -rf {mag} {jpg_path} {out_file} {masks_path_2} {nifti_final} {extracted_path} {out_aorta}"
+        f"rm -rf {mag} {jpg_path} {out_file} {masks_path_2} {nifti_final} {extracted_path}"
     )
     if os.stat(failed).st_size == 0:
         print("What do we say to the god of failures?\nNot today!")

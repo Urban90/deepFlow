@@ -18,7 +18,7 @@ NVIDIA Docker Container utilities (GPU version)
 
 **B. Run**
 
-**GPU Version** (default and highly recommended)
+**GPU Version** (default)
 
 `bash deepflow <folder of DICOM files>`
 
@@ -27,6 +27,31 @@ NVIDIA Docker Container utilities (GPU version)
 `bash deepflow <folder of DICOM ZIP files> cpu`
 
 *First run will pull the required Docker image which might take some time depending on the internet connection and the bandwidth.*
+s
+## Benchmarking ##
+
+In our tests, the CPU and GPU versions didn't have much of a difference in overall time but your mileage might vary.
+
+We selected ten random samples from the UK Biobank repository and perfomed the test on the host system in triplicate.
+
+```text
+Image version   Mean Time   Uncompressed size
+GPU             2min 37s    6.71 GB
+CPU             2min 31s    2.34 GB
+```
+
+```text
+Host System
+Alienware Area 51m R2
+Arch Linux
+Kernel: 5.17.5-arch1-1
+CPU: Intel(R) Core(TM) i7-10700K CPU @ 3.80GHz
+GPU: NVIDIA RTX 2080 Super (notebook)
+Storage: SanDisk SSD SD9SN8W512G USB-C
+Docker version 20.10.14, build a224086349
+```
+
+When using multiple GPUs or a power desktop/ server GPU, the speeds can go up drastically.
 
 ## Usage ##
 
