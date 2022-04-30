@@ -22,6 +22,4 @@ A GUI will ask you to select the folder containing zipped DICOM files.
 A single ZIP file per sample is expected.
 Results will be written in the `output` directory of the current folder.
 
-*Currently, the output file doesn't have a unique name, so, don't forget to move it. To be fixed in the next commit*
-
 ***Docker mounts your `HOME` directory inside `data`***
