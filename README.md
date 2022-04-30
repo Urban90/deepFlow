@@ -31,7 +31,7 @@ Change directory into the newly cloned DeepFlow folder
 `bash deepflow <folder of DICOM ZIP files> cpu`
 
 *First run will pull the required Docker image which might take some time depending on the internet connection and the bandwidth.*
-s
+
 ## Benchmarking ##
 
 In our tests, the CPU and GPU versions didn't have much of a difference in overall time but your mileage might vary.
@@ -55,14 +55,12 @@ Storage: SanDisk SSD SD9SN8W512G USB-C
 Docker version 20.10.14, build a224086349
 ```
 
-When using multiple GPUs or a power desktop/ server GPU, the speeds can go up drastically.
+When using multiple GPUs or a powerful desktop/ server GPU, the speeds can go up drastically.
 
 ## Usage ##
 
 A single ZIP file per sample is expected.
 Results will be written in the `output` directory of the current folder.
-
-***Docker mounts your `HOME` directory inside `data`***
 
 ## Description of scripts ##
 
@@ -71,3 +69,9 @@ Results will be written in the `output` directory of the current folder.
 **concat.sh:** Internal Docker VM script which compiles the results per run.
 
 **deepFlow.py:** Main script that does all the calculations inside the Docker VM.
+
+## Output ##
+
+**CompiledReport<date:time>.tsv:** Tab-delimited report of all the samples from the given folder.
+
+**<sample_name>.png:** Plot of the blood flow (mL/s) over the aortic valve in one heart cycle.
