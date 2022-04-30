@@ -18,6 +18,10 @@ NVIDIA Docker Container utilities (GPU version)
 
 **B. Run**
 
+Change directory into the newly cloned DeepFlow folder
+
+`cd deepflow`
+
 **GPU Version** (default)
 
 `bash deepflow <folder of DICOM files>`
