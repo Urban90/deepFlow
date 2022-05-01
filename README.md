@@ -12,25 +12,44 @@ NVIDIA Driver (GPU version)
 NVIDIA Docker Container utilities (GPU version)
 ```
 
-**A. Clone the Repository**
+**Clone the Repository**
 
 `git clone https://github.com/Urban90/deepFlow.git`
 
-**B. Run**
+### Run ###
 
 Change directory into the newly cloned DeepFlow folder
 
 `cd deepflow`
 
+**Linux/ Unix and macOS**
+
 **GPU Version** (default)
 
-`bash deepflow <folder of DICOM files>`
+`bash deepflow <folder of DICOM files> gpu`
 
 **CPU Version**
 
 `bash deepflow <folder of DICOM ZIP files> cpu`
 
 *First run will pull the required Docker image which might take some time depending on the internet connection and the bandwidth.*
+
+**Windows**
+
+Make sure you have Windows 10 or higher with WSL (recommended) or Hyper-V configured Docker service.
+
+**GPU**
+
+*In our experience, the GPU version is a bit buggy, not due to the code but because of some WSL2/ CUDA and Docker issues*
+
+`deepflow_windows.bat <folder of DICOM ZIP files> gpu`
+
+
+**CPU**
+
+`deepflow_windows.bat <folder of DICOM ZIP files> cpu`
+
+*Logs are not written to the disk in the Windows version*
 
 ## Benchmarking ##
 
@@ -75,3 +94,12 @@ Results will be written in the `output` directory of the current folder.
 **CompiledReport<date:time>.tsv:** Tab-delimited report of all the samples from the given folder.
 
 **<sample_name>.png:** Plot of the blood flow (mL/s) over the aortic valve in one heart cycle.
+
+# Citation #
+
+If you have used DeepFlow in any of your publications (thank you), don't forget to cite any one (or more) of the following papers:
+
+```text
+Natural history and GWAS of aortic valve regurgitation - a UK Biobank study (2022)
+Gomez, B. Singh, A., O'Sullivan, J, Ashley, E. (In Writing)
+```
