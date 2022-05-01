@@ -101,5 +101,5 @@ If you have used DeepFlow in any of your publications (thank you), don't forget 
 
 ```text
 Natural history and GWAS of aortic valve regurgitation - a UK Biobank study (2022)
-Gomez, B. Singh, A., O'Sullivan, J, Ashley, E. (In Writing)
+Gomes, B. Singh, A., O'Sullivan, J, Ashley, E. (In Writing)
 ```
