@@ -85,6 +85,8 @@ Results will be written in the `output` directory of the current folder.
 
 **deepflow:** Caller script that pulls (if required) and runs the deepFlow Docker image with correct parameters and mounts directories
 
+**deepflow_windows.bat:** Windows caller script that pulls (if required) and runs the deepFlow Docker image with correct parameters and mounts directories
+
 **concat.sh:** Internal Docker VM script which compiles the results per run.
 
 **deepFlow.py:** Main script that does all the calculations inside the Docker VM.
