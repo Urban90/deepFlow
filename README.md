@@ -40,8 +40,6 @@ Make sure you have Windows 10 or higher with WSL (recommended) or Hyper-V config
 
 **GPU**
 
-*In our experience, the GPU version is a bit buggy, not due to the code but because of some WSL2/ CUDA and Docker issues*
-
 `deepflow_windows.bat <folder of DICOM ZIP files> gpu`
 
 
