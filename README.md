@@ -69,7 +69,7 @@ We selected ten random samples from the UK Biobank repository and perfomed the t
 Image version   Mean Time   Uncompressed size
 GPU             2min 37s    6.71 GB
 CPU             2min 31s    2.34 GB
-ARM                         2.79GB
+ARM             1min 53s    2.79GB
 ```
 
 ```text
