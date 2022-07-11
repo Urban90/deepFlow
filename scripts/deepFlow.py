@@ -19,15 +19,11 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.core import Lambda, RepeatVector, Reshape
-from keras.layers.merge import concatenate, add
+from keras.layers import concatenate
+from keras.layers import add
 from keras.layers.pooling import MaxPooling2D, GlobalMaxPool2D
 from keras.models import Model, load_model
-from keras.preprocessing.image import (
-    ImageDataGenerator,
-    array_to_img,
-    img_to_array,
-    load_img,
-)
+from keras.utils import array_to_img, img_to_array, load_img
 from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 from scipy.optimize import curve_fit
@@ -35,7 +31,7 @@ from skimage.io import imread, imshow, concatenate_images
 from skimage.morphology import label
 from skimage.transform import resize
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.optimizers import Adam
+from keras.optimizers import Adam
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -274,7 +270,6 @@ def get_noise(rotated):
             ]
             stdv = np.min(list_values)
             final[y, x] = stdv
-    # final_cropped = final[10:182, 10:182]
     flatten = list(final.flatten())
     stats.percentileofscore(flatten, float(35))
     b = np.floor(np.percentile(flatten, 0.05))
@@ -285,8 +280,6 @@ def get_noise(rotated):
     ano = []
     for i in rotated:
         img = i * thresh
-        # plt.imshow(img)
-        # plt.show()
         ano.append(img)
     ano = np.array(ano)
     return ano
@@ -374,7 +367,6 @@ def move_files_nifti(path, masks_path_2, nifti_final):
         for j in os.listdir(x):
             y = os.path.join(x, j)
             ds = pydicom.dcmread(y, force=True)
-            # if ds[0x0008, 0x103E].value == 'flow_250_tp_AoV_bh_ePAT@c_P':
             if "_c_P_" in j:
                 shutil.copy(y, os.path.join(os.path.join(nifti_final, patient), j))
 
@@ -459,7 +451,7 @@ def asf(img, out_file):
     dt = p["interval"].values[0] / 30 / 1000  # how much time in seconds in one frame
     pix_dim = p["dim1"].values[0] / 10
     venc = p["venc"].values[0]
-    ((pix_dim)) / dt
+    #((pix_dim)) / dt
     final_2 = np.zeros((192, 192), dtype=np.float32)
     for y in range(0, 192):
         for x in range(0, 192):
@@ -519,6 +511,7 @@ def load_nii(nii_path, out_file, out_results):
     neg_files = -nifti_files_list
     masked = nifti_files_list * masks  # *(pix_dim**2) *dt
     masked = get_noise(masked)  # correction is here
+    #masked = masked * (pix_dim**2) * dt
     zipped_masks = list(zip(masked, masks))
     sums_v = []
     for i, j in zipped_masks:
@@ -528,11 +521,10 @@ def load_nii(nii_path, out_file, out_results):
         sums_v.append(v)
     masks_v_min = np.min(sums_v)
     masks_v_max = np.max(sums_v)
-    masked = masked * (pix_dim**2) * dt
     masked_neg = neg_files * masks  # *(pix_dim**2) *dt
     masked_neg = get_noise(masked_neg)
-    masked_neg = masked_neg * (pix_dim**2) * dt
-
+    #masked_neg = masked_neg * (pix_dim**2) * dt
+    masked = masked * (pix_dim**2) * dt
     zipped_masks_neg = list(zip(masked_neg, masks))
     sums_neg = []
     for i, j in zipped_masks_neg:
@@ -543,6 +535,7 @@ def load_nii(nii_path, out_file, out_results):
         sums_neg.append(v)
     masks_neg_min = np.min(sums_neg)
     masks_neg_max = np.max(sums_neg)
+    masked_neg = masked_neg * (pix_dim**2) * dt
     (
         net_flow,
         retrograde_flow,
@@ -563,7 +556,7 @@ def load_nii(nii_path, out_file, out_results):
     ) = get_flow(masked_neg, out_file)
 
     if boolean == True:
-        plt.plot(X, np_sum)
+        plt.plot(X, sums_v)
         plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")
@@ -584,7 +577,7 @@ def load_nii(nii_path, out_file, out_results):
             masks_v_min,
         )
     else:
-        plt.plot(X_neg, np_sum_neg)
+        plt.plot(X_neg, sums_neg)
         plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")

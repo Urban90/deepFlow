@@ -26,11 +26,21 @@ Change directory into the newly cloned DeepFlow folder
 
 **GPU Version** (default)
 
+(Nvidia GPU ONLY)
+
 `bash deepflow <folder of DICOM files> gpu`
 
 **CPU Version**
 
 `bash deepflow <folder of DICOM ZIP files> cpu`
+
+**ARM Version**
+
+*aarch64* is now supported. The latest Apple M1 (and later M2, M3 and so on) based macOS systems are now compatible with DeepFlow AI!
+
+Tested on a MacBook Pro with M1 Max and 64 GB RAM
+
+`bash deepflow <folder of DICOM ZIP files> arm`
 
 *First run will pull the required Docker image which might take some time depending on the internet connection and the bandwidth.*
 
@@ -59,17 +69,23 @@ We selected ten random samples from the UK Biobank repository and perfomed the t
 Image version   Mean Time   Uncompressed size
 GPU             2min 37s    6.71 GB
 CPU             2min 31s    2.34 GB
+ARM                         2.79GB
 ```
 
 ```text
 Host System
+Windows & Linus
 Alienware Area 51m R2
-Arch Linux
+Windows 11 | Arch Linux
 Kernel: 5.17.5-arch1-1
 CPU: Intel(R) Core(TM) i7-10700K CPU @ 3.80GHz
 GPU: NVIDIA RTX 2080 Super (notebook)
-Storage: SanDisk SSD SD9SN8W512G USB-C
 Docker version 20.10.14, build a224086349
+
+macOS
+MacBook Pro
+M1 Max 10 cores
+64 GB RAM
 ```
 
 When using multiple GPUs or a powerful desktop/ server GPU, the speeds can go up drastically.

@@ -2,7 +2,7 @@
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
-    echo "deepflow <folder of DICOM files> <optional 'cpu' flag>"
+    echo "deepflow <folder of DICOM files> <optional 'cpu' or 'arm' flag>"
     exit
 fi
 folder="$1"
@@ -32,6 +32,16 @@ then
             -v "$folder":/input \
             --rm \
             saditya88/deepflow:cpu /input 1>"$output"/Run_"$d".log 2>"$output"/Warns_"$d".log
+elif [ $2 == "arm" ]
+then
+    echo -e "ARM mode selected.\nOnly CPU is supported in this mode.\nPerformance might be slower."
+    docker run -u=$(id -u $USER):$(id -g $USER) \
+            -v $(pwd)/assets:/assets \
+            -v "$output":/output \
+            -v ~/:/data/ \
+            -v "$folder":/input \
+            --rm \
+            saditya88/deepflow:arm /input 1>"$output"/Run_"$d".log 2>"$output"/Warns_"$d".log
 else
     echo Unknwn input: "$folder"
     echo Only 'cpu' is accepted as an input
