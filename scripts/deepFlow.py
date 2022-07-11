@@ -556,7 +556,7 @@ def load_nii(nii_path, out_file, out_results):
     ) = get_flow(masked_neg, out_file)
 
     if boolean == True:
-        plt.plot(X, sums_v)
+        plt.plot(X, np_sum)
         plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")
@@ -577,7 +577,7 @@ def load_nii(nii_path, out_file, out_results):
             masks_v_min,
         )
     else:
-        plt.plot(X_neg, sums_neg)
+        plt.plot(X_neg, np_sum_neg)
         plt.axhline(y=0, color="r", linestyle="-")
         plt.title(f"{name}\n{software} Analysis")
         plt.xlabel("Time in ms")
