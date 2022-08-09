@@ -74,7 +74,7 @@ ARM             1min 53s    2.79GB
 
 ```text
 Host System
-Windows & Linus
+Windows & Linux
 Alienware Area 51m R2
 Windows 11 | Arch Linux
 Kernel: 5.17.5-arch1-1
