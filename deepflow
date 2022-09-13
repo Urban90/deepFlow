@@ -44,7 +44,7 @@ then
             saditya88/deepflow:arm /input 1>"$output"/Run_"$d".log 2>"$output"/Warns_"$d".log
 else
     echo Unknwn input: "$folder"
-    echo Only 'cpu' is accepted as an input
+    echo Only 'cpu/arm' are accepted as an input
     echo If you wish to use the GPU version, no arguments are required.
     exit
 fi
