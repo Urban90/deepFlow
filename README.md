@@ -117,5 +117,5 @@ If you have used DeepFlow in any of your publications (thank you), don't forget 
 
 ```text
 Genetic architecture of cardiac dynamic flow volumes (2022)
-Bruna Gomes, Aditya Singha, Jack W O’Sullivana, David Amar, Mikhailo Kostur, Francois Haddad, Michael Salerno, Victoria N. Parikh, Benjamin Meder, Euan A. Ashley (Pre-print soon. Publication to follow.)
+Bruna Gomes, Aditya Singh, Jack W O’Sullivan, David Amar, Mikhailo Kostur, Francois Haddad, Michael Salerno, Victoria N. Parikh, Benjamin Meder, Euan A. Ashley (Pre-print soon. Publication to follow.)
 ```
