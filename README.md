@@ -116,6 +116,6 @@ Results will be written in the `output` directory of the current folder.
 If you have used DeepFlow in any of your publications (thank you), don't forget to cite any one (or more) of the following papers:
 
 ```text
-Natural history and GWAS of aortic valve regurgitation - a UK Biobank study (2022)
-Gomes, B. Singh, A., O'Sullivan, J, Ashley, E. (In Writing)
+Genetic architecture of cardiac dynamic flow volumes for consideration in Nature Genetics (2022)
+Bruna Gomes, Aditya Singha, Jack W O’Sullivana, David Amar, Mikhailo Kostur, Francois Haddad, Michael Salerno, Victoria N. Parikha, Benjamin Meder, Euan A. Ashley (Pre-print soon. Publication to follow.)
 ```
