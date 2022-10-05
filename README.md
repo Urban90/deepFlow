@@ -116,6 +116,6 @@ Results will be written in the `output` directory of the current folder.
 If you have used DeepFlow in any of your publications (thank you), don't forget to cite any one (or more) of the following papers:
 
 ```text
-Genetic architecture of cardiac dynamic flow volumes for consideration in Nature Genetics (2022)
-Bruna Gomes, Aditya Singha, Jack W O’Sullivana, David Amar, Mikhailo Kostur, Francois Haddad, Michael Salerno, Victoria N. Parikha, Benjamin Meder, Euan A. Ashley (Pre-print soon. Publication to follow.)
+Genetic architecture of cardiac dynamic flow volumes (2022)
+Bruna Gomes, Aditya Singha, Jack W O’Sullivana, David Amar, Mikhailo Kostur, Francois Haddad, Michael Salerno, Victoria N. Parikh, Benjamin Meder, Euan A. Ashley (Pre-print soon. Publication to follow.)
 ```
